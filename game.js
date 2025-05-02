@@ -73,12 +73,19 @@ function resizeCanvas() {
   canvas.height = CANVAS_HEIGHT;
   
   // Scale the canvas display size
-  canvas.style.width = `${CANVAS_WIDTH * scale}px`;
-  canvas.style.height = `${CANVAS_HEIGHT * scale}px`;
+  const displayWidth = CANVAS_WIDTH * scale;
+  const displayHeight = CANVAS_HEIGHT * scale;
+  
+  canvas.style.width = `${displayWidth}px`;
+  canvas.style.height = `${displayHeight}px`;
   
   // Center the canvas
   canvas.style.margin = 'auto';
   canvas.style.display = 'block';
+  
+  // Add padding to container if needed
+  const paddingTop = (containerHeight - displayHeight) / 2;
+  container.style.paddingTop = `${paddingTop}px`;
 }
 
 // Initial resize and add resize listener
