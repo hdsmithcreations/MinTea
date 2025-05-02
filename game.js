@@ -64,8 +64,8 @@ function resizeCanvas() {
   
   // Calculate the scale to fit the canvas in the container while maintaining aspect ratio
   const scale = Math.min(
-    containerWidth / CANVAS_WIDTH,
-    containerHeight / CANVAS_HEIGHT
+    (containerWidth - 40) / CANVAS_WIDTH, // Account for padding
+    (containerHeight - 40) / CANVAS_HEIGHT
   );
   
   // Set the canvas size
@@ -82,10 +82,6 @@ function resizeCanvas() {
   // Center the canvas
   canvas.style.margin = 'auto';
   canvas.style.display = 'block';
-  
-  // Add padding to container if needed
-  const paddingTop = (containerHeight - displayHeight) / 2;
-  container.style.paddingTop = `${paddingTop}px`;
 }
 
 // Initial resize and add resize listener
