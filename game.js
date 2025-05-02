@@ -65,7 +65,7 @@ function resizeCanvas() {
   // Calculate the scale to fit the canvas in the container while maintaining aspect ratio
   const scale = Math.min(
     (containerWidth - 40) / CANVAS_WIDTH, // Account for padding
-    (containerHeight - 40) / CANVAS_HEIGHT
+    (containerHeight - (isMobile ? 80 : 40)) / CANVAS_HEIGHT // Extra space for mobile
   );
   
   // Set the canvas size
@@ -82,6 +82,17 @@ function resizeCanvas() {
   // Center the canvas
   canvas.style.margin = 'auto';
   canvas.style.display = 'block';
+  
+  // Adjust for mobile viewport
+  if (isMobile) {
+    const viewportHeight = window.innerHeight;
+    const gameHeight = displayHeight + 80; // Account for mute button and padding
+    if (gameHeight > viewportHeight) {
+      const newScale = (viewportHeight - 80) / CANVAS_HEIGHT;
+      canvas.style.width = `${CANVAS_WIDTH * newScale}px`;
+      canvas.style.height = `${CANVAS_HEIGHT * newScale}px`;
+    }
+  }
 }
 
 // Initial resize and add resize listener
