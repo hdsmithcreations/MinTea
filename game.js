@@ -239,7 +239,7 @@ class Obstacle {
 let obstacles = [];
 
 function spawnObstacle() {
-  if (Math.random() < 0.02 && obstacles.length < 2) {
+  if (Math.random() < 0.04 && obstacles.length < 2) {
     // Check if there's already an obstacle on screen
     const existingObstacle = obstacles.find(obs => obs.isPixelpress || obs.isTeacup);
     
@@ -253,7 +253,7 @@ function spawnObstacle() {
     if (gameState.score < 15) {
       type = 'teacup';  // 100% chance for teacups before score 15
     } else {
-      type = Math.random() < 0.70 ? 'teacup' : 'pixelpress';  // 70% teacups, 30% pixelpress
+      type = Math.random() < 0.85 ? 'teacup' : 'pixelpress';  // Increased teacup chance from 70% to 85%
     }
     
     obstacles.push(new Obstacle(type));
@@ -364,11 +364,19 @@ function handleTouchEnd(e) {
 // =============================================
 // Game Controls
 // =============================================
+let lastSpacePress = 0;
+const RESTART_DELAY = 500; // 500ms delay between restarts
+
 // Keyboard controls
 document.addEventListener("keydown", (e) => {
   if (e.code === "Space") {
+    const now = Date.now();
     if (gameState.isGameOver) {
-      resetGame();
+      // Only allow restart if enough time has passed since last press
+      if (now - lastSpacePress > RESTART_DELAY) {
+        resetGame();
+        lastSpacePress = now;
+      }
     } else {
       minty.jump();
     }
@@ -385,7 +393,21 @@ document.addEventListener("keyup", (e) => {
 
 // Touch controls
 if (isMobile) {
-  canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+  let lastTouchTime = 0;
+  
+  canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    const now = Date.now();
+    if (gameState.isGameOver) {
+      if (now - lastTouchTime > RESTART_DELAY) {
+        resetGame();
+        lastTouchTime = now;
+      }
+    } else {
+      handleTouchStart(e);
+    }
+  }, { passive: false });
+  
   canvas.addEventListener('touchend', handleTouchEnd, { passive: false });
   
   // Prevent scrolling when touching the canvas
